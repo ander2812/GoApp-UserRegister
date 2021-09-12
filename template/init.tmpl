@@ -1,0 +1,31 @@
+{{ define "init"}}
+{{template "headboard"}}
+
+
+  <div class="container">
+      
+   <div class="form-group">
+     <label for="">USER NAME</label>
+     <input type="text"
+       class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
+     <small id="helpId" class="form-text text-muted">Help text</small>
+   </div>
+
+   <div class="form-group">
+     <label for="">PASSWORD</label>
+     <input type="text"
+       class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
+     <small id="helpId" class="form-text text-muted">Help text</small>
+
+     <a name="" id="" class="btn btn-primary" href="/create" role="button">SIGN IN</a>
+   </div>
+   <br><br>
+
+   <class="text-muted">New User
+   <br>
+   <a name="" id="" class="btn btn-primary" href="/create" role="button">SIGN UP</a>
+
+{{template "footer"}}
+      
+
+{{end}}
