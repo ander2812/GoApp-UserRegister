@@ -14,11 +14,14 @@
         </tr>
     </thead>
     <tbody>
+    {{range.}}
         <tr>
-            <td scope="row"></td>
-            <td></td>
-            <td></td>
+            <td>{{.username}}</td>
+            <td>{{.lastname}}</td>
+            <td>{{.firstname}}</td>
+            <td>{{.birthdate}}</td>
         </tr>
+    {{end}}
     </tbody>
 </table>
 {{template "footer"}}
