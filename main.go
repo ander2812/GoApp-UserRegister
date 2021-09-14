@@ -1,14 +1,11 @@
 package main
 
 import (
-	//"fmt"
-
 	"database/sql"
 	"log"
 	"net/http"
 	"text/template"
-
-	_ "github.com/go-sql-driver/mysql"
+	//"github.com/go-sql-driver/mysql"
 )
 
 func conexionBD() (conexion *sql.DB) {
