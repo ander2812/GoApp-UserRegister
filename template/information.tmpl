@@ -26,32 +26,5 @@
 </table>
 {{template "footer"}}
 {{end}}
-{{define "information"}}
-{{template "headboard"}}
-
-<img src="" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
-<a href="init" class="badge badge-primary">Sign Out</a>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Lastname</th>
-            <th>Firstname</th>
-            <th>Birthdate</th>
-        </tr>
-    </thead>
-    <tbody>
-    {{range.}}
-        <tr>
-            <td>{{.username}}</td>
-            <td>{{.lastname}}</td>
-            <td>{{.firstname}}</td>
-            <td>{{.birthdate}}</td>
-        </tr>
-    {{end}}
-    </tbody>
-</table>
-{{template "footer"}}
 
 
