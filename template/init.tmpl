@@ -4,26 +4,25 @@
 
   <div class="container">
       
-   <div class="form-group">
-     <label for="">USER NAME</label>
-     <input type="text"
-       class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
-     <small id="helpId" class="form-text text-muted">Help text</small>
+
+   <div class="form-group m-auto w-50 p-5 border rounded shadow p-3 mb-5 bg-body" >
+    <h1 class = "m-auto text-center">  Start your session </h1>
+    <br/>
+        <form method = "GET" action = "/information" >
+        <input type="text"
+                  class="form-control" name="usname" id="" aria-describedby="helpId" placeholder="User Name">
+    <br>
+                <input type="password"
+                  class="form-control" name="passw" id="" aria-describedby="helpId" placeholder="Password">
+                <br/>
+
+
+                <!--<a name="" id="" class="btn btn-primary" href="/information" role="button">SIGN IN</a> -->
+                <button class = "btn btn-primary" type="submit"> Sing In</button>
+                <a class = "btn btn-primary" href = "/create"  > Sing up</a>
+        </form>
+
    </div>
-
-   <div class="form-group">
-     <label for="">PASSWORD</label>
-     <input type="text"
-       class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
-     <small id="helpId" class="form-text text-muted">Help text</small>
-
-     <a name="" id="" class="btn btn-primary" href="/information" role="button">SIGN IN</a>
-   </div>
-   <br><br>
-
-   <class="text-muted">New User
-   <br>
-   <a name="" id="" class="btn btn-primary" href="/create" role="button">SIGN UP</a>
 
 {{template "footer"}}
       

@@ -1,60 +1,59 @@
 {{define "create"}}
 {{template "headboard"}}
 
-<div class="card">
-    <div class="card-header">
-        Sign Up
-    </div>
 
 
-    <div class="card-body">
-        <form method="post" action="/insert">
 
+    <div class="card-body w-50 m-auto border rounded shadow p-3 mb-5 bg-body" >
+        <form method="post" action="/information">
+
+        <h1 m-auto text-center> Sing up </h1>
+        <br/>
         <div class="form-group">
-          <label for="">User Name</label>
-          <input type="text"
-            class="form-control" name="username" id="username" aria-describedby="helpId" placeholder="">
-          <small id="helpId" class="form-text text-muted">Help text</small>
-        </div>
 
+          <input type="text"
+            class="form-control" name="username" id="username" aria-describedby="helpId" placeholder="User Name">
+
+        </div>
+        <br/>
         <div class="form-group">
-          <label for="">Password</label>
-          <input type="text"
-            class="form-control" name="password" id="password" aria-describedby="helpId" placeholder="">
-          <small id="helpId" class="form-text text-muted">Help text</small>
-        </div>
 
+          <input type="password"
+            class="form-control" name="password" id="password" aria-describedby="helpId" placeholder="Password">
+
+        </div>
+    <br/>
         <div class="form-group">
-          <label for="">Confirm Pwd</label>
-          <input type="text"
-            class="form-control" name="confirmpwd" id="confirmpwd" aria-describedby="helpId" placeholder="">
-          <small id="helpId" class="form-text text-muted">Help text</small>
-        </div>
 
+          <input type="password"
+            class="form-control" name="confirmpwd" id="confirmpwd" aria-describedby="helpId" placeholder="Confirm Password">
+
+        </div>
+<br/>
         <div class="form-group">
-          <label for="">Firstname</label>
-          <input type="text"
-            class="form-control" name="firstname" id="firstname" aria-describedby="helpId" placeholder="">
-          <small id="helpId" class="form-text text-muted">Help text</small>
-        </div>
 
+          <input type="text"
+            class="form-control" name="firstname" id="firstname" aria-describedby="helpId" placeholder="First Name">
+
+        </div>
+<br/>
         <div class="form-group">
-          <label for="">Lastname</label>
-          <input type="text"
-            class="form-control" name="lastname" id="lastname" aria-describedby="helpId" placeholder="">
-          <small id="helpId" class="form-text text-muted">Help text</small>
-        </div>
 
+          <input type="text"
+            class="form-control" name="lastname" id="lastname" aria-describedby="helpId" placeholder="Last Name">
+
+        </div>
+<br/>
         <div class="form-group">
-          <label for="">Birthdate</label>
-          <input type="text"
-            class="form-control" name="birthdate" id="birthdate" aria-describedby="helpId" placeholder="">
-          <small id="helpId" class="form-text text-muted">Help text</small>
+
+          <input type="date"
+            class="form-control" name="birthdate" id="birthdate" aria-describedby="helpId" placeholder="Birthday">
+
         </div>
+<br/>
+        <a name="" id="" class="btn btn-primary w-25" href="/information" role="button">save</a>
 
-        <a name="" id="" class="btn btn-primary" href="/information" role="button">save</a>
-
-        <button type="submit" class="btn btn-primary">Cancel</button>
+        <button type="submit" class="btn btn-primary w-25">Cancel</button>
 
 
         </form>
