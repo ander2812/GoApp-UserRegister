@@ -24,7 +24,7 @@ func conexionBD() (conexion *sql.DB) {
 	return conexion
 }
 
-var temp = template.Must(template.ParseGlob("template/*"))
+var temp = template.Must(template.ParseGlob("template/init"))
 
 func main() {
 	http.HandleFunc("/", Init)
