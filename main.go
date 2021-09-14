@@ -30,6 +30,7 @@ func main() {
 	http.HandleFunc("/", Init)
 	http.HandleFunc("/create", Create)
 	http.HandleFunc("/information", Information)
+	http.HandleFunc("/insert", Insert)
 
 	log.Println("Servidor corriendo...")
 	http.ListenAndServe(":8080", nil)
@@ -44,20 +45,41 @@ type Users struct {
 }
 
 func Init(w http.ResponseWriter, r *http.Request) {
-	//fmt.Fprint(w, "Hola develoteca")
 
 	temp.ExecuteTemplate(w, "init", nil)
 
 }
 
 func Create(w http.ResponseWriter, r *http.Request) {
-	//fmt.Fprint(w, "Hola develoteca")
+
 	temp.ExecuteTemplate(w, "create", nil)
 
 }
 
+func Insert(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == "POST" {
+
+		username := r.FormValue("username")
+		firstname := r.FormValue("firstname")
+		lastname := r.FormValue("lastname")
+		birthdate := r.FormValue("birthday")
+
+		conexionEstablecida := conexionBD()
+		insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO users(username,lastname,firstname,birthdate) VALUES('?','?','?','?')")
+
+		if err != nil {
+			panic(err.Error())
+		}
+		insertarRegistros.Exec(username, lastname, firstname, birthdate)
+
+		http.Redirect(w, r, "/", 301)
+
+	}
+
+}
+
 func Information(w http.ResponseWriter, r *http.Request) {
-	//fmt.Fprint(w, "Hola develoteca")
 
 	conexionEstablecida := conexionBD()
 	registros, err := conexionEstablecida.Query("SELECT * FROM users")
@@ -87,24 +109,5 @@ func Information(w http.ResponseWriter, r *http.Request) {
 		arregloUsers = append(arregloUsers, user)
 	}
 	temp.ExecuteTemplate(w, "information", arregloUsers)
-
-	if r.Method == "POST" {
-
-		username := r.FormValue("username")
-		firstname := r.FormValue("firstname")
-		lastname := r.FormValue("lastname")
-		birthdate := r.FormValue("birthday")
-
-		conexionEstablecida := conexionBD()
-		insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO users(username,lastname,firstname,birthdate) VALUES('?','?','?','?')")
-
-		if err != nil {
-			panic(err.Error())
-		}
-		insertarRegistros.Exec(username, lastname, firstname, birthdate)
-
-		http.Redirect(w, r, "/", 301)
-
-	}
 
 }
