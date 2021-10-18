@@ -1,66 +1,69 @@
-{{define "create"}}
-{{template "headboard"}}
+{{ define "create"}}
+{{ template "headboard"}}
 
+<div class="card">
 
+  <div class="card-header"
+    users
+  </div>
 
+  <div class="card-body w-50 m-auto border rounded shadow p-3 mb-5 bg-body" >
+    <form method="post" action="/insert">
 
-    <div class="card-body w-50 m-auto border rounded shadow p-3 mb-5 bg-body" >
-        <form method="post" action="/information">
+      <h1 m-auto text-center> Sing up </h1>
+          <br/>
 
-        <h1 m-auto text-center> Sing up </h1>
-        <br/>
-        <div class="form-group">
+      <div class="form-group">
 
-          <input type="text"
-            class="form-control" name="username" id="username" aria-describedby="helpId" placeholder="User Name">
+            <input type="text"
+              class="form-control" name="username" id="username" aria-describedby="helpId" placeholder="User Name">
 
-        </div>
-        <br/>
-        <div class="form-group">
+          </div>
+          <br/>
+          <div class="form-group">
 
-          <input type="password"
-            class="form-control" name="password" id="password" aria-describedby="helpId" placeholder="Password">
+            <input type="password"
+              class="form-control" name="password" id="password" aria-describedby="helpId" placeholder="Password">
 
-        </div>
-    <br/>
-        <div class="form-group">
+          </div>
+      <br/>
+          <div class="form-group">
 
-          <input type="password"
-            class="form-control" name="confirmpwd" id="confirmpwd" aria-describedby="helpId" placeholder="Confirm Password">
+            <input type="password"
+              class="form-control" name="confirmpwd" id="confirmpwd" aria-describedby="helpId" placeholder="Confirm Password">
 
-        </div>
-<br/>
-        <div class="form-group">
+          </div>
+  <br/>
+          <div class="form-group">
 
-          <input type="text"
-            class="form-control" name="firstname" id="firstname" aria-describedby="helpId" placeholder="First Name">
+            <input type="text"
+              class="form-control" name="firstname" id="firstname" aria-describedby="helpId" placeholder="First Name">
 
-        </div>
-<br/>
-        <div class="form-group">
+          </div>
+  <br/>
+          <div class="form-group">
 
-          <input type="text"
-            class="form-control" name="lastname" id="lastname" aria-describedby="helpId" placeholder="Last Name">
+            <input type="text"
+              class="form-control" name="lastname" id="lastname" aria-describedby="helpId" placeholder="Last Name">
 
-        </div>
-<br/>
-        <div class="form-group">
+          </div>
+  <br/>
+          <div class="form-group">
 
-          <input type="date"
-            class="form-control" name="birthdate" id="birthdate" aria-describedby="helpId" placeholder="Birthday">
+            <input type="date"
+              class="form-control" name="birthdate" id="birthdate" aria-describedby="helpId" placeholder="Birthday">
 
-        </div>
-<br/>
-        <a name="" id="" class="btn btn-primary w-25" href="/information" role="button">save</a>
+          </div>
+  <br/>
+          <button type="submit" class="btn btn-primary" herf="/insert">save</button>
 
-        <button type="submit" class="btn btn-primary w-25">Cancel</button>
-
-
-        </form>
-
-
-    </div>
+          <button type="submit" class="btn btn-primary w-25">Cancel</button>
+    </form>
+  </div>
 </div>
-{{template "footer"}}
+
+{{ template "footer"}}
+
+
 
 {{end}}

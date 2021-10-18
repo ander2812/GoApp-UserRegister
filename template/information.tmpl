@@ -4,26 +4,31 @@
 <img src="" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
 <a href="init" class="badge badge-primary">Sign Out</a>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Lastname</th>
-            <th>Firstname</th>
-            <th>Birthdate</th>
-        </tr>
-    </thead>
-    <tbody>
-    {{range.}}
-        <tr>
-            <td>{{.username}}</td>
-            <td>{{.lastname}}</td>
-            <td>{{.firstname}}</td>
-            <td>{{.birthdate}}</td>
-        </tr>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Confirmpwd</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Birthdate</th>
+            </tr>
+        </thead>
+        <tbody>
+    {{ range.}}
+            <tr>
+                <td>{{.Username}}</td>
+                <td>asdfgh {{.Password}}</td>
+                <td>asdfg {{.Confirmpwd}}</td>
+                <td>Anderson {{.Firstname}}</td>
+                <td>Rueda {{.Lastname}}</td>
+                <td>2016/06/07 {{.Birthdate}}</td>
+            </tr>
+
     {{end}}
-    </tbody>
-</table>
+        </tbody>
+    </table>
 {{template "footer"}}
 
 {{end}}
