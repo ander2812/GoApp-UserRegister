@@ -8,22 +8,22 @@
         <thead>
             <tr>
                 <th>Username</th>
-                <th>Password</th>
-                <th>Confirmpwd</th>
                 <th>Firstname</th>
                 <th>Lastname</th>
                 <th>Birthdate</th>
+                <th>Country</th>
+                <th>University</th>
             </tr>
         </thead>
         <tbody>
     {{ range.}}
             <tr>
                 <td>{{.Username}}</td>
-                <td>asdfgh {{.Password}}</td>
-                <td>asdfg {{.Confirmpwd}}</td>
-                <td>Anderson {{.Firstname}}</td>
-                <td>Rueda {{.Lastname}}</td>
-                <td>2016/06/07 {{.Birthdate}}</td>
+                <td>{{.Firstname}}</td>
+                <td>{{.Lastname}}</td>
+                <td>{{.Birthdate}}</td>
+                <td>{{.Country}}</td>
+                <td>{{.Universidad}}</td>
             </tr>
 
     {{end}}

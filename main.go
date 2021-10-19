@@ -39,10 +39,14 @@ func main() {
 }
 
 type User struct {
-	Username  string
-	Firstname string
-	Lastname  string
-	Birthdate string
+	Username    string
+	Firstname   string
+	Password    string
+	Confirmpwd  string
+	Lastname    string
+	Birthdate   string
+	Country     string
+	Universidad string
 }
 
 func Init(w http.ResponseWriter, r *http.Request) {
@@ -67,16 +71,18 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 		firstname := r.FormValue("firstname")
 		lastname := r.FormValue("lastname")
 		birthdate := r.FormValue("birthdate")
+		country := r.FormValue("country")
+		universidad := r.FormValue("universidad")
 
 		conexionEstablecida := conexionBD()
 
-		insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO users(username,password,confirmpwd,firstname,lastname,birthdate) VALUES(?,?,?,?,?,?)")
+		insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO users(username,password,confirmpwd,firstname,lastname,birthdate,country,universidad) VALUES(?,?,?,?,?,?,?,?)")
 
 		if err != nil {
 			panic(err.Error())
 		}
 
-		insertarRegistros.Exec(username, password, confirmpwd, firstname, lastname, birthdate)
+		insertarRegistros.Exec(username, password, confirmpwd, firstname, lastname, birthdate, country, universidad)
 
 		temp.ExecuteTemplate(w, "init", nil)
 
@@ -106,7 +112,9 @@ func Information(w http.ResponseWriter, r *http.Request) {
 		var firstname string
 		var lastname string
 		var birthdate string
-		err = registros.Scan(&username, &password, &confirmpwd, &firstname, &lastname, &birthdate)
+		var country string
+		var universidad string
+		err = registros.Scan(&username, &password, &confirmpwd, &firstname, &lastname, &birthdate, &country, &universidad)
 
 		if err != nil {
 			panic(err.Error())
@@ -114,20 +122,26 @@ func Information(w http.ResponseWriter, r *http.Request) {
 
 		user.Username = username
 		user.Firstname = firstname
+		user.Password = password
+		user.Confirmpwd = confirmpwd
 		user.Lastname = lastname
 		user.Birthdate = birthdate
+		user.Country = country
+		user.Universidad = universidad
 
 		arrayUser = append(arrayUser, user)
 
 		if r.Method == "GET" {
 
-			UserName := r.FormValue("usname")
-			PassWord := r.FormValue("passw")
+			if user.Username != r.FormValue("usname") || user.Password != r.FormValue("passw") {
 
-			if UserName != user.Username {
+				log.Println("usuario incorrecto")
+
+			} else if user.Username == r.FormValue("usname") && user.Password == r.FormValue("passw") {
+
+				log.Println("usuario correcto")
 
 			}
-
 		}
 	}
 
