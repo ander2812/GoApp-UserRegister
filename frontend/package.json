@@ -1,0 +1,15 @@
+{
+  "name": "rcp-validation-module-frontend",
+  "version": "1.0.0",
+  "description": "This part of the module will manage the frontend flow of the application at least in the validation and registration module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Juan Fernando Martinez - Anderson Rueda",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pug": "^3.0.2"
+  }
+}
