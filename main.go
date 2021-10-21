@@ -6,21 +6,18 @@ import (
 	"net/http"
 	"text/template"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func conexionBD() (conexion *sql.DB) {
-
-	Driver := "mysql"
-	Usuario := "root"
-	Contrasenia := ""
-	Nombre := "system"
-
-	conexion, err := sql.Open(Driver, Usuario+":"+Contrasenia+"@tcp(127.0.0.1)/"+Nombre)
+	conexion, err := sql.Open("sqlite3", "./base.db")
+	conexion.Exec("create table if no exists users(username varchar(40) primary key, password varchar(100), firstname varchar(40), lastname varchar(40), birthdate DATE, country varchar(40), universidad varchar(40))")
 
 	if err != nil {
 		panic(err.Error())
 	}
+
+	log.Println("base de datos conectada")
 
 	return conexion
 }
@@ -67,7 +64,6 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 
 		username := r.FormValue("username")
 		password := r.FormValue("password")
-		confirmpwd := r.FormValue("confirmpwd")
 		firstname := r.FormValue("firstname")
 		lastname := r.FormValue("lastname")
 		birthdate := r.FormValue("birthdate")
@@ -76,13 +72,13 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 
 		conexionEstablecida := conexionBD()
 
-		insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO users(username,password,confirmpwd,firstname,lastname,birthdate,country,universidad) VALUES(?,?,?,?,?,?,?,?)")
+		insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO users(username,password,firstname,lastname,birthdate,country,universidad) VALUES(?,?,?,?,?,?,?)")
 
 		if err != nil {
 			panic(err.Error())
 		}
 
-		insertarRegistros.Exec(username, password, confirmpwd, firstname, lastname, birthdate, country, universidad)
+		insertarRegistros.Exec(username, password, firstname, lastname, birthdate, country, universidad)
 
 		temp.ExecuteTemplate(w, "init", nil)
 
@@ -108,13 +104,12 @@ func Information(w http.ResponseWriter, r *http.Request) {
 	for registros.Next() {
 		var username string
 		var password string
-		var confirmpwd string
 		var firstname string
 		var lastname string
 		var birthdate string
 		var country string
 		var universidad string
-		err = registros.Scan(&username, &password, &confirmpwd, &firstname, &lastname, &birthdate, &country, &universidad)
+		err = registros.Scan(&username, &password, &firstname, &lastname, &birthdate, &country, &universidad)
 
 		if err != nil {
 			panic(err.Error())
@@ -123,7 +118,6 @@ func Information(w http.ResponseWriter, r *http.Request) {
 		user.Username = username
 		user.Firstname = firstname
 		user.Password = password
-		user.Confirmpwd = confirmpwd
 		user.Lastname = lastname
 		user.Birthdate = birthdate
 		user.Country = country
