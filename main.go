@@ -1,32 +1,28 @@
 package main
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
 	"database/sql"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"text/template"
 
-	_ "github.com/go-sql-driver/mysql"
-
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/rand"
-	"fmt"
-	"io"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func conexionBD() (conexion *sql.DB) {
-
-	Driver := "mysql"
-	Usuario := "root"
-	Contrasenia := ""
-	Nombre := "system"
-
-	conexion, err := sql.Open(Driver, Usuario+":"+Contrasenia+"@tcp(127.0.0.1)/"+Nombre)
+	conexion, err := sql.Open("sqlite3", "./base.db")
+	conexion.Exec("create table if no exists users(username varchar(40) primary key, password varchar(100), firstname varchar(40), lastname varchar(40), birthdate DATE, country varchar(40), universidad varchar(40))")
 
 	if err != nil {
 		panic(err.Error())
 	}
+
+	log.Println("base de datos conectada")
 
 	return conexion
 }
@@ -45,12 +41,14 @@ func main() {
 }
 
 type User struct {
-	Username  string
-	Firstname string
-	Lastname  string
-	password  string
-	country   string
-	college   string
+	Username    string
+	Firstname   string
+	Password    string
+	Confirmpwd  string
+	Lastname    string
+	Birthdate   string
+	Country     string
+	Universidad string
 }
 
 func Init(w http.ResponseWriter, r *http.Request) {
@@ -69,32 +67,38 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "POST" {
 
-		username := r.FormValue("username")
+		if authenticate(r.FormValue("username"))
+		{
+			http.Redirect(w, r, "/", 301)
+		}else{
+			username := r.FormValue("username")
 		password := r.FormValue("password")
-		confirmpwd := r.FormValue("confirmpwd")
 		firstname := r.FormValue("firstname")
 		lastname := r.FormValue("lastname")
+		birthdate := r.FormValue("birthdate")
 		country := r.FormValue("country")
-		college := r.FormValue("college")
+		universidad := r.FormValue("universidad")
 
 		conexionEstablecida := conexionBD()
 
-		insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO users(username,password,confirmpwd,firstname,lastname,country, college) VALUES(?,?,?,?,?,?)")
+		insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO users(username,password,firstname,lastname,birthdate,country,universidad) VALUES(?,?,?,?,?,?,?)")
 
 		if err != nil {
 			panic(err.Error())
 		}
 
-		insertarRegistros.Exec(username, password, confirmpwd, firstname, lastname, country, college)
+		insertarRegistros.Exec(username, password, firstname, lastname, birthdate, country, universidad)
 
 		temp.ExecuteTemplate(w, "init", nil)
 
 		http.Redirect(w, r, "/", 301)
+		}
 
 	}
 
 }
 
+//method used to validate if the username is on use
 func authenticate(usrname string, psw string) bool {
 	conectionEnambled := conexionBD()
 	storedInfo, err := conectionEnambled.Query("SELECT * FROM users")
@@ -108,16 +112,14 @@ func authenticate(usrname string, psw string) bool {
 
 	for storedInfo.Next() {
 		var username string
-		var password string
 
-		err = storedInfo.Scan(&username, &password)
+		err = storedInfo.Scan(&username)
 
 		if err != nil {
 			panic(err.Error())
 		}
 
 		user.Username = username
-		user.password = password
 
 		arrayUser = append(arrayUser, user)
 
@@ -125,9 +127,7 @@ func authenticate(usrname string, psw string) bool {
 
 	for i := 0; i < len(arrayUser); i++ {
 		if arrayUser[i].Username == usrname {
-			if arrayUser[i].password == psw {
-				return true
-			}
+			return true
 		}
 	}
 
@@ -151,11 +151,12 @@ func Information(w http.ResponseWriter, r *http.Request) {
 	for registros.Next() {
 		var username string
 		var password string
-		var confirmpwd string
 		var firstname string
 		var lastname string
 		var birthdate string
-		err = registros.Scan(&username, &password, &confirmpwd, &firstname, &lastname, &birthdate)
+		var country string
+		var universidad string
+		err = registros.Scan(&username, &password, &firstname, &lastname, &birthdate, &country, &universidad)
 
 		if err != nil {
 			panic(err.Error())
@@ -163,7 +164,12 @@ func Information(w http.ResponseWriter, r *http.Request) {
 
 		user.Username = username
 		user.Firstname = firstname
+		user.Password = password
 		user.Lastname = lastname
+
+		user.Birthdate = birthdate
+		user.Country = country
+		user.Universidad = universidad
 
 		arrayUser = append(arrayUser, user)
 
@@ -171,7 +177,7 @@ func Information(w http.ResponseWriter, r *http.Request) {
 	status := false
 	for i := 0; i < len(arrayUser) && !status; i++ {
 		if arrayUser[i].Username == r.FormValue("username") {
-			if arrayUser[i].password == r.FormValue("password") {
+			if arrayUser[i].Password == r.FormValue("password") {
 				status = true
 			}
 		}
@@ -215,6 +221,7 @@ func encrypt(txt string, k string) {
 	// random sequence
 	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
 		fmt.Println(err)
+
 	}
 
 	// here we encrypt our text using the Seal function
