@@ -179,25 +179,29 @@ func Information(w http.ResponseWriter, r *http.Request) {
 		arrayUser = append(arrayUser, user)
 
 	}
-	var status bool
-	status = false
-	for i := 0; i < len(arrayUser); i++ {
-		//log.Println(arrayUser[i].Password == r.FormValue("passw"))
-		if arrayUser[i].Username == r.FormValue("usname") {
-			if arrayUser[i].Password == r.FormValue("passw") {
 
-				status = true
+	var status bool
+
+	if r.Method == "POST" {
+
+		for i := 0; i < len(arrayUser) && !status; i++ {
+
+			if arrayUser[i].Username == r.FormValue("usname") {
+				if arrayUser[i].Password == r.FormValue("passw") {
+					status = true
+
+				}
 
 			}
+
 		}
 
-	}
+		if status {
+			temp.ExecuteTemplate(w, "information", arrayUser)
+		} else {
+			http.Redirect(w, r, "/", 301)
+		}
 
-	if status {
-		temp.ExecuteTemplate(w, "/information", arrayUser)
-		http.Redirect(w, r, "/information", 200)
-	} else {
-		http.Redirect(w, r, "/", 301)
 	}
 
 }
