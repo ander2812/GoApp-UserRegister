@@ -67,31 +67,30 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "POST" {
 
-		if authenticate(r.FormValue("username"))
-		{
+		if authenticate(r.FormValue("username")) {
 			http.Redirect(w, r, "/", 301)
-		}else{
+		} else {
 			username := r.FormValue("username")
-		password := r.FormValue("password")
-		firstname := r.FormValue("firstname")
-		lastname := r.FormValue("lastname")
-		birthdate := r.FormValue("birthdate")
-		country := r.FormValue("country")
-		universidad := r.FormValue("universidad")
+			password := r.FormValue("password")
+			firstname := r.FormValue("firstname")
+			lastname := r.FormValue("lastname")
+			birthdate := r.FormValue("birthdate")
+			country := r.FormValue("country")
+			universidad := r.FormValue("universidad")
 
-		conexionEstablecida := conexionBD()
+			conexionEstablecida := conexionBD()
 
-		insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO users(username,password,firstname,lastname,birthdate,country,universidad) VALUES(?,?,?,?,?,?,?)")
+			insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO users(username,password,firstname,lastname,birthdate,country,universidad) VALUES(?,?,?,?,?,?,?)")
 
-		if err != nil {
-			panic(err.Error())
-		}
+			if err != nil {
+				panic(err.Error())
+			}
 
-		insertarRegistros.Exec(username, password, firstname, lastname, birthdate, country, universidad)
+			insertarRegistros.Exec(username, password, firstname, lastname, birthdate, country, universidad)
 
-		temp.ExecuteTemplate(w, "init", nil)
+			temp.ExecuteTemplate(w, "init", nil)
 
-		http.Redirect(w, r, "/", 301)
+			http.Redirect(w, r, "/", 301)
 		}
 
 	}
@@ -99,7 +98,7 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 }
 
 //method used to validate if the username is on use
-func authenticate(usrname string, psw string) bool {
+func authenticate(usrname string) bool {
 	conectionEnambled := conexionBD()
 	storedInfo, err := conectionEnambled.Query("SELECT * FROM users")
 
@@ -112,8 +111,14 @@ func authenticate(usrname string, psw string) bool {
 
 	for storedInfo.Next() {
 		var username string
+		var password string
+		var firstname string
+		var lastname string
+		var birthdate string
+		var country string
+		var universidad string
 
-		err = storedInfo.Scan(&username)
+		err = storedInfo.Scan(&username, &password, &firstname, &lastname, &birthdate, &country, &universidad)
 
 		if err != nil {
 			panic(err.Error())
@@ -174,17 +179,23 @@ func Information(w http.ResponseWriter, r *http.Request) {
 		arrayUser = append(arrayUser, user)
 
 	}
-	status := false
-	for i := 0; i < len(arrayUser) && !status; i++ {
-		if arrayUser[i].Username == r.FormValue("username") {
-			if arrayUser[i].Password == r.FormValue("password") {
+	var status bool
+	status = false
+	for i := 0; i < len(arrayUser); i++ {
+		//log.Println(arrayUser[i].Password == r.FormValue("passw"))
+		if arrayUser[i].Username == r.FormValue("usname") {
+			if arrayUser[i].Password == r.FormValue("passw") {
+
 				status = true
+
 			}
 		}
+
 	}
 
 	if status {
-		temp.ExecuteTemplate(w, "information", arrayUser)
+		temp.ExecuteTemplate(w, "/information", arrayUser)
+		http.Redirect(w, r, "/information", 200)
 	} else {
 		http.Redirect(w, r, "/", 301)
 	}
