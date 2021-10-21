@@ -67,31 +67,30 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "POST" {
 
-		if authenticate(r.FormValue("username"))
-		{
+		if authenticate(r.FormValue("username")) {
 			http.Redirect(w, r, "/", 301)
-		}else{
+		} else {
 			username := r.FormValue("username")
-		password := r.FormValue("password")
-		firstname := r.FormValue("firstname")
-		lastname := r.FormValue("lastname")
-		birthdate := r.FormValue("birthdate")
-		country := r.FormValue("country")
-		universidad := r.FormValue("universidad")
+			password := r.FormValue("password")
+			firstname := r.FormValue("firstname")
+			lastname := r.FormValue("lastname")
+			birthdate := r.FormValue("birthdate")
+			country := r.FormValue("country")
+			universidad := r.FormValue("universidad")
 
-		conexionEstablecida := conexionBD()
+			conexionEstablecida := conexionBD()
 
-		insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO users(username,password,firstname,lastname,birthdate,country,universidad) VALUES(?,?,?,?,?,?,?)")
+			insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO users(username,password,firstname,lastname,birthdate,country,universidad) VALUES(?,?,?,?,?,?,?)")
 
-		if err != nil {
-			panic(err.Error())
-		}
+			if err != nil {
+				panic(err.Error())
+			}
 
-		insertarRegistros.Exec(username, password, firstname, lastname, birthdate, country, universidad)
+			insertarRegistros.Exec(username, password, firstname, lastname, birthdate, country, universidad)
 
-		temp.ExecuteTemplate(w, "init", nil)
+			temp.ExecuteTemplate(w, "init", nil)
 
-		http.Redirect(w, r, "/", 301)
+			http.Redirect(w, r, "/", 301)
 		}
 
 	}
@@ -99,7 +98,7 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 }
 
 //method used to validate if the username is on use
-func authenticate(usrname string, psw string) bool {
+func authenticate(usrname string) bool {
 	conectionEnambled := conexionBD()
 	storedInfo, err := conectionEnambled.Query("SELECT * FROM users")
 
@@ -230,5 +229,43 @@ func encrypt(txt string, k string) {
 	// slice. The nonce must be NonceSize() bytes long and unique for all
 	// time, for a given key.
 	fmt.Println(gcm.Seal(nonce, nonce, text, nil))
+
+}
+
+func authenticate2(usrname string, passwr string) bool {
+	conectionEnambled := conexionBD()
+	storedInfo, err := conectionEnambled.Query("SELECT * FROM users")
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	user := User{}
+	arrayUser := []User{}
+
+	for storedInfo.Next() {
+		var username string
+
+		err = storedInfo.Scan(&username)
+
+		if err != nil {
+			panic(err.Error())
+		}
+
+		user.Username = username
+
+		arrayUser = append(arrayUser, user)
+
+	}
+
+	for i := 0; i < len(arrayUser); i++ {
+		if arrayUser[i].Username == usrname {
+			if arrayUser[i].Password == passwr {
+				return true
+			}
+		}
+	}
+
+	return false
 
 }
