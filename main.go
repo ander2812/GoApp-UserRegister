@@ -34,6 +34,8 @@ func main() {
 	http.HandleFunc("/create", Create)
 	http.HandleFunc("/information", Information)
 	http.HandleFunc("/insert", Insert)
+	http.HandleFunc("/alert", Alert)
+	http.HandleFunc("/alert2", Alert2)
 
 	log.Println("Servidor corriendo...")
 	http.ListenAndServe(":8080", nil)
@@ -68,6 +70,7 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 
 		if authenticate(r.FormValue("username")) {
+			Alert2(w, r)
 			http.Redirect(w, r, "/", 301)
 		} else {
 			username := r.FormValue("username")
@@ -199,11 +202,20 @@ func Information(w http.ResponseWriter, r *http.Request) {
 		if status {
 			temp.ExecuteTemplate(w, "information", arrayUser)
 		} else {
+			Alert(w, r)
 			http.Redirect(w, r, "/", 301)
 		}
 
 	}
 
+}
+
+func Alert(w http.ResponseWriter, r *http.Request) {
+	temp.ExecuteTemplate(w, "alert", nil)
+}
+
+func Alert2(s http.ResponseWriter, t *http.Request) {
+	temp.ExecuteTemplate(s, "alert2", nil)
 }
 
 func encrypt(txt string, k string) {
